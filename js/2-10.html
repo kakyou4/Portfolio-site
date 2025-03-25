@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>二進数を十進数に変換するゲーム</title>
+</head>
+<body>
+    <h1>二進数を十進数に変換するゲーム</h1>
+    <p id="binaryNumber"></p>
+    <div id="buttons">
+        <!-- ボタンを0から15まで作成 -->
+        <script>
+            for (let i = 0; i <= 15; i++) {
+                document.write(`<button onclick="checkAnswer(${i})">${i}</button>`);
+            }
+        </script>
+    </div>
+    <p id="result"></p>
+    <p id="selectedButton"></p> <!-- 選んだボタンの番号を表示 -->
+    <script src="2-10.js"></script>
+</body>
+</html>

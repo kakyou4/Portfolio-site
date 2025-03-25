@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="robots" content="noindex">
+    <title>ブックマークレット</title>
+    <link rel="stylesheet" href="../style.css">
+  </head>
+  <body>
+    <main>
+      <h3>タイトルとURLを取得するブックマークレット</h3>
+      <pre>javascript:var uri = encodeURI(location.href);
+if (uri.match(/trello\.com/)) {uri = uri.replace(/trello\.com\/(\D+)\/(\w+)\/.*/,'trello.com/$1/$2/')};
+if (uri.match(/atlassian\.net/)) {uri = uri.replace(/\/(\d+)\/\S+/,'/$1/')};
+if (uri.match(/zendesk\.com/)) {uri = uri.replace(/articles\/(\d+).*/,'articles\/$1')};
+if (uri.match(/cybozu\.com/)) {uri = uri.replace(/record=(\d+).*/,'record=$1')};
+if (uri.match(/apple\.com/)) {uri = uri.replace(/app\/%.*\/(id\d+)\?*.*/,'app/$1')};
+prompt('Title \+ URL', document.title + '｜' + uri );</pre><br>
+      <br>
+      <h3>選択した案件名からメニューを絞って当月の社内依頼データベースの情報を表示</h3>
+      ※業務効率化ツール。URL部分を削除してるため動きません
+      <pre>javascript:var p_name = window.getSelection().toString();
+p_name = p_name.replace(/\n/g, '');
+p_name = p_name.replace(/\s$/, '');
+encodeURIComponent(p_name);
+var m_name = prompt("絞り込みたいmenu_name","");
+
+var s_day = new Date(new Date().getFullYear(),new Date().getMonth()-1,1);
+var s_y = s_day.getFullYear();
+var s_m = (s_day.getMonth()+1);
+if(s_m < 9){s_m = '0' + s_m;}
+s_day = s_y + '-' + s_m + '-01';
+
+var e_day = new Date(new Date().getFullYear(),new Date().getMonth(),0);
+var e_y= e_day.getFullYear();
+var e_m= (e_day.getMonth()+1);
+if(e_m < 9){e_m = '0' + e_m;}
+var e_d = e_day.getDate();
+e_day =e_y + '-' + e_m + '-' + e_d;
+
+if ( m_name == null ){ retarn; } else {
+if ( m_name == "" ){
+
+  if ( p_name == "" ){
+  window.open('社内依頼データベース/?q=start >= "' s_day '" and end <= "' e_day '"' );
+  } else {
+  window.open('社内依頼データベース/?q=start >= "' s_day '" and end <= "' e_day '" and promotion_name like "' p_name '"' );}
+
+} else {
+
+  if ( p_name == "" ){
+  window.open('社内依頼データベース/?q=start >=
+    "' s_day '" and end <= "' e_day '" and menu_name like "' m_name '"'
+    );
+  } else {
+  window.open('社内依頼データベース/?q=start >=
+    "' s_day '" and end <= "' e_day '" and promotion_name like "' p_name '" and menu_name like "' m_name '"'
+  );}
+}};</pre>
+      <div style="margin: 50px auto;">
+        <input type="button" onclick="window.close();" value="このページを閉じる">
+      </div>
+    </main>
+  </body>
+</html>
