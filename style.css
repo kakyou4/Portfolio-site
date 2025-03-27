@@ -48,20 +48,17 @@ h2::first-letter {
 }
 
 .category {
-	padding: 10px;
+	padding: 0 10px;
 }
 
 h3 {
 	font-weight: normal;
-	margin: 5px auto;
+	margin-top: 20px;
+	margin-bottom: 5px;
 }
 
 h3:before {
-	content: "◇";
-}
-
-h3:after {
-	content: "◇";
+	content: "◇ ";
 }
 
 .container {
@@ -73,34 +70,85 @@ h3:after {
 
 .card {
 	box-sizing: border-box;
-	width: 300px;
+	width: 120px;
 	border: 1px solid #ccc;
 	border-radius: 8px;
 	padding: 5px;
 	text-align: center;
+	font-size: smaller;
+	line-height: 2;
 }
 
 .card img {
 	margin: 0;
-	width: 80px;
+	width: 48px;
 	height: auto;
 }
 
-.card p {
-	background-color: #f5f5f5;
-	font-size: 0.9em;
-	line-height: 1.5;
-	margin: 0;
-	padding: 7px;
-	text-align: left;
-}
-.made {
-	margin: 10px;
-	font-size: 0.9em;
-	text-align: left;
+.skill {
+	position: relative;
+	margin-bottom: 5px;
 }
 
+.skill_score {
+	font-size: 20px;
+	font-weight: bold;
+}
 
+.skill_detail {
+	position: absolute;
+		top: 15px;
+		left: 10px;
+	display: none;
+	padding: 2px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	line-height: 1.2;
+	color: #000;
+	background-color: lightyellow;
+}
+
+.skill_score:hover + .skill_detail {
+	display: block;
+}
+
+.create_link {
+	margin: 2px;
+	padding: 3px 5px;
+	color: #fff;
+	background-color: #0d6efd;
+	border-radius: 5px;
+	text-decoration: none;
+}
+
+.create_link:hover {
+	background-color: #0a53be;
+}
+
+.card .github_link {
+	width: 24px;
+	vertical-align: top;
+}
+
+.admin, .user {
+	text-align: center;
+	padding: 3px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	color: #fff;
+}
+
+.admin {
+	background-color: #198754;
+}
+
+.user {
+	background-color: gray;
+}
+
+.tool_link {
+	color: #000;
+}
 
 
 footer {
@@ -120,32 +168,45 @@ pre {
   border: solid 1px #ccc;
 }
 
-@media screen and (max-width: 1319px) {
+@media screen and (max-width: 1294px) {
+  main {
+		max-width: 1140px;
+	}
+}
+
+@media screen and (max-width: 1154px) {
+  main {
+		max-width: 1000px;
+	}
+}
+
+@media screen and (max-width: 1014px) {
   .header {
     height: 360px;
   }
 
   main {
-		max-width: 980px;
-		margin: 10px auto;
+		max-width: 860px;
 	}
 }
-@media screen and (max-width: 994px) {
+
+@media screen and (max-width: 874px) {
+  main {
+		max-width: 720px;
+	}
+}
+
+@media screen and (max-width: 734px) {
   .header {
     height: 240px;
   }
 
   main {
-		max-width: 660px;
-		margin: 10px auto;
+		max-width: 580px;
 	}
 }
 
-@media screen and (max-width: 674px) {
-	body {
-		font-size: small;
-	}
-
+@media screen and (max-width: 594px) {
   .header {
     height: 200px;
   }
@@ -155,8 +216,15 @@ pre {
 		right: 10%;
 	}
 
-	.container {
-		justify-content: center;
+	main {
+		max-width: 440px;
+	}
+	
+}
+
+@media screen and (max-width: 454px) {
+	main {
+		max-width: 300px;
 	}
 	
 }
