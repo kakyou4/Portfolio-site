@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang=”ja”>
+	<head>
+		<title>A-Z Typing Time Attack</title>
+		<meta charset="UTF-8">
+		<meta name="description" content="キー配置を覚えることに特化したタイピング。AからZを順にタイプしタイムアタックを繰り返すことで、アルファベット26文字の位置を覚えることができ、タイピングやブラインドタッチが劇的に早くなります">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta property="og:url" content="https://yukai.yu-nagi.com/js/a-z_typing.html"/>
+		<meta property="og:type" content="article"/>
+		<meta property="og:title" content="A→Zタイピング タイムアタック"/>
+		<meta property="og:description" content="キー配置を覚えることに特化したタイピング。AからZを順にタイプしタイムアタックを繰り返すことで、アルファベット26文字の位置を覚えることができ、タイピングやブラインドタッチが劇的に早くなります"/>
+		<meta property="og:site_name" content="ポートフォリオ"/>
+		<meta property="og:image" content="https://yukai.yu-nagi.com/img/a-z_image_board.png"/>
+		<link rel="stylesheet" href="a-z.css">
+		<link rel="icon" href="../img/a-z_icon.ico">
+	</head>
+	<body>
+		<img src="../img/a-z_icon.gif" height="16px">
+		<span class="header">タイピング タイムアタック</span>
+		<img src="../img/a-z_icon.gif" height="16px">
+		<hr>
+
+		<!-- プレイ前・プレイ中 -->
+		<div id="playarea">
+			<!-- ゲーム開始ボタン -->
+			<center><button id="startButton"> Spaceキーでスタート</button></center>
+
+			<!-- タイピングゲーム画面 -->
+			<div id="typeword">A</div>
+			<div class="timer"><span id="timer">00.00</span>秒</div>
+			<div class="keyboard">
+				<div class="key1" data-key="Q">Q</div>
+				<div class="key2" data-key="W">W</div>
+				<div class="key3" data-key="E">E</div>
+				<div class="key4" data-key="R">R</div>
+				<div class="key4" data-key="T">T</div>
+				<div class="key4" data-key="Y">Y</div>
+				<div class="key4" data-key="U">U</div>
+				<div class="key3" data-key="I">I</div>
+				<div class="key2" data-key="O">O</div>
+				<div class="key1" data-key="P">P</div>
+				<div class="space"> </div>
+				<div class="space"> </div>
+			</div>
+			<div class="keyboard">
+				<div class="space"> </div>
+				<div class="key1" data-key="A">A</div>
+				<div class="key2" data-key="S">S</div>
+				<div class="key3" data-key="D">D</div>
+				<div class="key4" data-key="F">F</div>
+				<div class="key4" data-key="G">G</div>
+				<div class="key4" data-key="H">H</div>
+				<div class="key4" data-key="J">J</div>
+				<div class="key3" data-key="K">K</div>
+				<div class="key2" data-key="L">L</div>
+				<div class="key1" data-key=";">;</div>
+				<div class="space"> </div>
+			</div>
+			<div class="keyboard">
+				<div class="space"> </div>
+				<div class="space"> </div>
+				<div class="key1" data-key="Z">Z</div>
+				<div class="key2" data-key="X">X</div>
+				<div class="key3" data-key="C">C</div>
+				<div class="key4" data-key="V">V</div>
+				<div class="key4" data-key="B">B</div>
+				<div class="key4" data-key="N">N</div>
+				<div class="key4" data-key="M">M</div>
+				<div class="key3" data-key=",">,</div>
+				<div class="key2" data-key=".">.</div>
+				<div class="key1" data-key="/">/</div>
+			</div>
+		</div>
+
+		<!-- リザルト -->
+		<div id="result">
+			<h1>-結果-</h1>
+			<table>
+				<tr>
+					<td>&#9830;クリアタイム</td>
+					<td>：<span id="cleartime">00.00</span>秒</td>
+				</tr>
+				<tr>
+					<td>&#9830;ランク</td>
+					<td>：<span id="rank">-</span></td>
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						&#9830;打てなかった文字：
+						<div id="misstype"></div>
+						<center><button onclick="location.reload()" class="reloadButton">リトライ</button></center>
+					</tr>
+			</table>
+		</div>
+		<div style="font-size: small; text-align: center; margin-top: 10px;">&copy;2025 <img src="../img/name.png" class="name"> All rights reserved.</div>
+
+	<script type="text/javascript" src="a-z.js"></script>
+	</body>
+<html>

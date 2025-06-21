@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang=”ja”>
+	<head>
+		<title>基数変換ツール</title>
+		<meta charset="UTF-8">
+		<meta name="description" content="2進数、10進数、16進数を変換できる便利ツール">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta property="og:url" content="https://yukai.yu-nagi.com/js/kisu_convert_tool.html"/>
+		<meta property="og:type" content="article"/>
+		<meta property="og:title" content="基数変換ツール"/>
+		<meta property="og:description" content="2進数、10進数、16進数を変換できる便利ツール"/>
+		<meta property="og:site_name" content="ポートフォリオ"/>
+		<meta property="og:image" content="../img/kisu_convert_tool_image_board.png"/>
+		<link rel="icon" href="../img/kisu_convert_tool.ico">
+
+<style type="text/css">
+
+.main_panel {
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: center;
+	align-items: center;
+	min-width: 240px;
+}
+
+.input_panel {
+	margin: 0;
+	padding: 10px;
+	background-color: aliceblue;
+	border-radius: 10px;
+}
+
+.output_panel {
+	margin: 0;
+	padding: 10px;
+	background-color: aliceblue;
+	border-radius: 10px;
+}
+
+.arrow{
+	margin: 0 10px;
+	height: auto;
+	text-align: center;
+}
+
+.arrow-right {
+  display: inline;
+}
+
+.arrow-down {
+  display: none;
+}
+
+.panel_header {
+	color: #666;
+	font-size: small;
+}
+
+.textbox {
+	margin: 10px;
+	padding: 10px;
+	width: 380px;
+	font-size: 200%;
+	border-radius: 5px;
+	border: 2px solid #eee;
+}
+
+table {
+	width: 60px;
+	border: 2px solid #eee;
+}
+
+details {
+	padding: 5px;
+	margin: 50px auto 100px;
+	max-width: 400px;
+	color: #333;
+	font-size: smaller;
+	border: 2px solid #eee;
+	border-radius: 10px;
+}
+
+.manual{
+	padding: 5px 20px;
+	line-height: 1.7;
+}
+
+.marker {
+	background-color: #ff9;
+}
+
+.footer {
+	margin-top: 240px;
+	font-size: small;
+	text-align: center;
+}
+
+.name {
+	height: 1.1em;
+	align-items: center;
+}
+
+/* 980pxを下回ったら表示変更 */
+@media (max-width: 980px) {
+
+	.arrow {
+	width: 980px;
+	}
+
+	.arrow-right {
+		display: none;
+	}
+
+	.arrow-down {
+		display: inline;
+		margin: 0;
+		padding: 0;
+	}
+}
+
+@media (max-width: 460px) {
+.textbox {
+	max-width: 300px;
+	font-size: 150%;
+}
+}
+
+</style>
+	</head>
+
+	<body>
+		<div class="header">基数変換ツール</div>
+		<hr>
+		<div class="main">
+			<div class="main_panel">
+				<div class="input_panel">
+					<div class="panel_header">変換前 》</div>
+					<hr>
+					<div class="radio-group">
+  						<label><input type="radio" name="before_mode" value="2"> 2進数  </label>
+						<label><input type="radio" name="before_mode" value="10">10進数  </label>
+						<label><input type="radio" name="before_mode" value="16">16進数</label>
+					</div><!-- radio-group -->
+					<input type="text" class="textbox" id="input_num" placeholder="値を入力してください" autofocus>
+				</div><!-- input_panel -->
+
+				<div class="arrow">
+					<svg class="arrow-right" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-caret-right" viewBox="0 0 16 16">
+						<path d="M6 12.796V3.204L11.481 8zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753"/>
+					</svg>
+					<svg class="arrow-down" xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
+						<path d="M3.204 5h9.592L8 10.481zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659"/>
+					</svg>
+				</div><!-- arrow -->
+
+				<div class="output_panel">
+					<div class="panel_header">》変換後</div>
+					<hr>
+					<div class="radio-group">
+  						<label><input type="radio" name="after_mode" value="2" > 2進数  </label>
+						<label><input type="radio" name="after_mode" value="10" checked>10進数  </label>
+						<label><input type="radio" name="after_mode" value="16">16進数</label>
+					</div><!-- radio-group -->
+					<input type="text" class="textbox" id="output_num"  readonly>
+				</div><!-- output_panel -->
+			</div><!-- main_panel -->
+		</div><!-- main -->
+		<details>
+			<summary>ツール説明</summary>
+			<div class="manual">
+				<span class="marker">2進数</span>、<span class="marker">10進数</span>、<span class="marker">16進数</span>を相互に<span class="marker">変換するツール</span>です<br>
+			ラジオボタンを切り替えるごとに再計算します			
+				<ol>
+					<li><span class="marker">変換したい値</span>を入力（例：F3）</li>
+					<li>現在の値が<span class="marker">何進数か</span>を選択（例：16進数）</li>
+					<li><span class="marker">何進数に</span>変換したいかを選択（例：10進数）</li>
+				</ol>
+			</div>
+		</details>
+		<div class="footer">&copy;2025 <img src="../img/name.png" class="name"> All rights reserved.</div>
+	</body>
+
+<script>
+const getValues = () => {
+  const beforeMode = document.querySelector('input[name="before_mode"]:checked')?.value;
+  const afterMode = document.querySelector('input[name="after_mode"]:checked')?.value;
+  const inputNum = document.getElementById("input_num")?.value.trim();
+
+  // 必須の値がそろっていない場合は処理しない
+  if (!beforeMode || !afterMode || !inputNum) return;
+
+  // 進数変換の実行
+  return parseInt(inputNum, Number(beforeMode)).toString(Number(afterMode)).toUpperCase();
+};
+
+// 値がある場合のみ表示
+const updateOutput = () => {
+  const result = getValues();
+  if (result) document.getElementById('output_num').value = result;
+};
+
+// フォーカスが外れたときに更新
+document.getElementById("input_num").addEventListener("blur", updateOutput);
+
+
+// ラジオボタン選択ごとに更新
+document.querySelectorAll('input[name="before_mode"]').forEach(el => el.addEventListener("change", updateOutput));
+document.querySelectorAll('input[name="after_mode"]').forEach(el => el.addEventListener("change", updateOutput));
+</script>
+
+</html>
