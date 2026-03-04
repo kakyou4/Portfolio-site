@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Excel関数クイズ</title>
+  <style>
+    #suggestions {
+      border: 1px solid #ccc;
+      max-height: 150px;
+      overflow-y: auto;
+      position: absolute;
+      background: white;
+    }
+    #suggestions div {
+      padding: 4px;
+      cursor: pointer;
+    }
+    #suggestions div:hover {
+      background: #eef;
+    }
+    .input-wrapper {
+      position: relative;
+      width: 300px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Excel関数名を入力してください</h2>
+  <div class="input-wrapper">
+    <input type="text" id="excelInput" placeholder="例: SUM" autocomplete="off">
+    <div id="suggestions"></div>
+  </div>
+
+  <script>
+    const excelFunctions = [
+      "SUM", "AVERAGE", "IF", "VLOOKUP", "HLOOKUP", "INDEX", "MATCH", "COUNT",
+      "COUNTA", "COUNTIF", "COUNTIFS", "MAX", "MIN", "LEFT", "RIGHT", "MID",
+      "CONCAT", "TEXT", "NOW", "TODAY", "ISNUMBER", "ISERROR", "AND", "OR", "NOT"
+    ];
+
+    const input = document.getElementById("excelInput");
+    const suggestions = document.getElementById("suggestions");
+
+    input.addEventListener("input", () => {
+      const query = input.value.toUpperCase();
+      suggestions.innerHTML = "";
+
+      if (query.length === 0) return;
+
+      const matched = excelFunctions.filter(func => func.startsWith(query));
+      
+      matched.forEach(func => {
+        const div = document.createElement("div");
+        div.textContent = func;
+        div.addEventListener("click", () => {
+          input.value = func;
+          suggestions.innerHTML = "";
+        });
+        suggestions.appendChild(div);
+      });
+    });
+
+    // 補助候補以外の場所をクリックしたら非表示
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".input-wrapper")) {
+        suggestions.innerHTML = "";
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<html lang=ja>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="../img/profile.ico">
+	<title>日報メール</title>
+	<style>
+		body {
+			font-size: 14px;
+		}
+    img {
+      width: 24px;
+      vertical-align: middle;
+    }
+    table {
+      width: 100%;
+    }
+    td {
+      padding-top: 5px;
+    }
+		input {
+			width: 100%;
+		}
+    .main {
+      margin: 15px auto;
+      width: 500px;
+      border: 1px dashed #333;
+      border-radius: 5px;
+    }
+    .label {
+      width : 20%;
+      text-align: center;
+    }
+    .day {
+      font-size: smaller;
+    }
+    details {
+      margin: 30px auto;
+      padding: 10px;
+      width: 480px;
+      border-radius: 5px;
+      background-color: #ddd;
+    }
+    @media screen and (max-width: 500px) {
+      .main {
+        width: 100%;
+        font-size: 12px;
+      }
+      input {
+        width: 96%;
+      }
+      hr {
+        width: 96%;
+      }
+      textarea {
+        width: 96%;
+      }
+      details {
+        width: 96%;
+      }
+    }
+	</style>
+</head>
+<body>
+<img src="../img/mail.svg">
+日報メール作成
+<hr>
+<div class="main">
+  <table>
+    <tr>
+      <td class="label">名前</td>
+      <td>
+        <input type="text" id="myName" value="Y.K">
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <hr style="margin: 0; border: none; border-top: 1px dashed #333;">
+      </td>
+    </tr>
+    <tr>
+      <td class="label">宛先</td>
+      <td>
+        <input type="text" id="mailto" placeholder="xxx@xxx.xxx">
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <hr style="margin: 0; border: none; border-top: 1px dashed #333;">
+      </td>
+    </tr>
+    <tr>
+      <td class="label">件名</td>
+      <td>
+        <input type="text" id="subject" value="日報を提出します"><br>
+        <span class="day"><span id="hidukeHTML">YYYY年MM月DD日分</span>（自動更新）</span>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <hr style="margin: 0; border: none; border-top: 1px dashed #333;">
+      </td>
+    </tr>
+    <tr>
+      <td class="label">本文</td>
+      <td>
+        <textarea id="body" rows="10" cols="50">
+各位
+
+お疲れ様です。
+【名前】です。
+
+本日の日報提出致しますので、ご確認ください。
+
+どうぞよろしくお願いいたします。
+        </textarea>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <hr style="margin: 0; border: none; border-top: 1px dashed #333;">
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" style="text-align:center;">
+        <a href="#" onClick="sendMail(); return false;">メール作成</a>
+      </td>
+    </tr>
+  </table>
+
+</div>
+<details>
+  <summary>使い方</summary>
+  mailtoで起動する定型メールを作成できます<br>
+  ・日付は件名で自動入力<br>
+  ・本文の【名前】はフォームの『名前』に置き換えられます<br>
+  ・一時的に変更したい場合はフォームの値を変更してください<br>
+  ・デフォルト値を変更したい場合はHTMLを直接編集してください<br>
+  　（このページを Ctrl + S して自分のPCに保存できます）
+</details>
+<br>
+
+
+<script>
+	function getTodayHiduke() {
+		const today = new Date();
+		const yyyy = today.getFullYear();
+		const mm = String(today.getMonth() + 1).padStart(2, '0');
+		const dd = String(today.getDate()).padStart(2, '0');
+		return `${yyyy}年${mm}月${dd}日`;	
+	}
+
+	function sendMail() {
+		const hiduke = getTodayHiduke();
+
+		const name = document.getElementById('myName').value;
+		const to = document.getElementById('mailto').value;
+		const subjectBase = document.getElementById('subject').value;
+		const body = document.getElementById('body').value.replace("【名前】",name);
+		const subject = `${subjectBase}_${name}_${hiduke}分`;
+
+		const mailtoHref = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+		window.location.href = mailtoHref;
+	}
+
+	window.addEventListener("DOMContentLoaded", () => {
+		document.getElementById("hidukeHTML").textContent = getTodayHiduke();
+	}); //読み込み時に日付取得
+
+</script>
+
+</body>
+</html>

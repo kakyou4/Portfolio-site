@@ -177,7 +177,7 @@ details {
 				</ol>
 			</div>
 		</details>
-		<div class="footer">&copy;2025 <img src="../img/name.png" class="name"> All rights reserved.</div>
+		<div class="footer">&copy;2025 Y.K All rights reserved.</div>
 	</body>
 
 <script>
@@ -199,9 +199,8 @@ const updateOutput = () => {
   if (result) document.getElementById('output_num').value = result;
 };
 
-// フォーカスが外れたときに更新
-document.getElementById("input_num").addEventListener("blur", updateOutput);
-
+// 入力するたびに更新
+document.getElementById("input_num").addEventListener("input", updateOutput);
 
 // ラジオボタン選択ごとに更新
 document.querySelectorAll('input[name="before_mode"]').forEach(el => el.addEventListener("change", updateOutput));

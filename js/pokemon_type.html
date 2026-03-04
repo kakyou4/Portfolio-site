@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<title>ポケモンタイプ相性検索</title>
+		<meta charset="UTF-8">
+		<meta name="description" content="ポケモンタイプ相性検索">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta property="og:url" content="https://yukai.yu-nagi.com/js/pokemon_type.html"/>
+		<meta property="og:type" content="article"/>
+		<meta property="og:title" content="ポケモンタイプ相性検索"/>
+		<meta property="og:description" content="ポケモンのタイプを入れて検索すると、効率のいい攻撃タイプが分かります"/>
+		<meta property="og:site_name" content="ポートフォリオ"/>
+		<meta property="og:image" content="../img/★★★.png"/>
+		<link rel="icon" href="https://yukai.yu-nagi.com/img/★★★.ico">
+
+    <style type="text/css">
+      .main {
+        max-width: 600px;
+        margin: 10px auto;
+        text-align: center;
+        line-height: 2.0;
+      }
+
+      select {
+        margin: 4px;
+        padding: 4px;
+        font-size: 105%;
+      }
+
+      #search {
+        width: 100px;
+        margin-top: 10px;
+        padding: 4px;
+      }
+      
+      table {
+        margin: 0 auto;
+        width: 90%;
+      }
+
+      td {
+        border: 1px solid #000000;
+      }
+
+      #x4, #x2, #x1_2, #x1_4, #x0 {
+        text-align: left;
+        padding-left: 8px;
+      }
+
+      .footer {
+        margin-top: 40px;
+        font-size: small;
+        text-align: center;
+      }
+
+      @media screen and (max-width: 600px) {
+        tr {
+          font-size: 12px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="header">ポケモンタイプ相性検索</div>
+		<hr>
+    <div class="main">
+      <form>
+      <label>タイプ1</label>
+        <select name="type1" id="type1">
+          <option value="0">-</option>
+          <option value="1">ノーマル</option>
+          <option value="2">ほのお</option>
+          <option value="3">みず</option>
+          <option value="4">でんき</option>
+          <option value="5">くさ</option>
+          <option value="6">こおり</option>
+          <option value="7">かくとう</option>
+          <option value="8">どく</option>
+          <option value="9">じめん</option>
+          <option value="10">ひこう</option>
+          <option value="11">エスパー</option>
+          <option value="12">むし</option>
+          <option value="13">いわ</option>
+          <option value="14">ゴースト</option>
+          <option value="15">ドラゴン</option>
+          <option value="16">あく</option>
+          <option value="17">はがね</option>
+          <option value="18">フェアリー</option>
+        </select>
+        <br>
+        <label>タイプ2</label>
+        <select name="type2" id="type2" disabled>
+          <option value="0">-</option>
+          <option value="1">ノーマル</option>
+          <option value="2">ほのお</option>
+          <option value="3">みず</option>
+          <option value="4">でんき</option>
+          <option value="5">くさ</option>
+          <option value="6">こおり</option>
+          <option value="7">かくとう</option>
+          <option value="8">どく</option>
+          <option value="9">じめん</option>
+          <option value="10">ひこう</option>
+          <option value="11">エスパー</option>
+          <option value="12">むし</option>
+          <option value="13">いわ</option>
+          <option value="14">ゴースト</option>
+          <option value="15">ドラゴン</option>
+          <option value="16">あく</option>
+          <option value="17">はがね</option>
+          <option value="18">フェアリー</option>
+        </select><br>
+        <input type="button" id="search" value="検索">
+      </form>
+      <hr>
+      <table>
+        <tr bgcolor="#ff6f91">
+          <td width="25%">4倍</td><td id="x4"></td>
+        </tr>
+        <tr bgcolor="#d169a3">          
+          <td>2倍</td><td id="x2"></td>
+        </tr>
+        <tr bgcolor="#9a67a5">
+          <td>1/2倍</td><td id="x1_2"></td>
+        </tr>
+        <tr bgcolor="#666296">
+          <td>1/4倍</td><td id="x1_4"></td>
+        </tr>
+        <tr bgcolor="#40577a">
+          <td>効果なし</td><td id="x0"></td>
+        </tr>
+      </table>
+
+    </div>
+    <div class="footer">&copy;2025 Y.K All rights reserved.</div>
+
+    <script>
+      // 1.定数・データ定義
+      const typeNames = {
+        1: "ノーマル",
+        2: "ほのお",
+        3: "みず",
+        4: "でんき",
+        5: "くさ",
+        6: "こおり",
+        7: "かくとう",
+        8: "どく",
+        9: "じめん",
+        10: "ひこう",
+        11: "エスパー",
+        12: "むし",
+        13: "いわ",
+        14: "ゴースト",
+        15: "ドラゴン",
+        16: "あく",
+        17: "はがね",
+        18: "フェアリー"
+      }
+      
+      const typeChart = [
+        [1, 13, 0.5], // ノーマル技はいわタイプに0.5倍
+        [1, 14, 0],   // ノーマル技はゴーストタイプに無効
+        [1, 17, 0.5], // ノーマル技ははがねタイプに0.5倍
+
+        [2, 2, 0.5],  // ほのお技はほのおタイプに0.5倍
+        [2, 3, 0.5],  // ほのお技はみずタイプに0.5倍
+        [2, 5, 2],    // ほのお技はくさタイプに2倍
+        [2, 6, 2],    // ほのお技はこおりタイプに2倍
+        [2, 12, 2],   // ほのお技はむしタイプに2倍
+        [2, 13, 0.5], // ほのお技はいわタイプに0.5倍
+        [2, 15, 0.5], // ほのお技はドラゴンタイプに0.5倍
+        [2, 17, 2],   // ほのお技ははがねタイプに2倍
+
+        [3, 2, 2],    // みず技はほのおタイプに2倍
+        [3, 3, 0.5],  // みず技はみずタイプに0.5倍
+        [3, 5, 0.5],  // みず技はくさタイプに0.5倍
+        [3, 9, 2],    // みず技はじめんタイプに2倍
+        [3, 13, 2],   // みず技はいわタイプに2倍
+        [3, 15, 0.5], // みず技はドラゴンタイプに0.5倍
+
+        [4, 3, 2],    // でんき技はみずタイプに2倍
+        [4, 4, 0.5],  // でんき技はでんきタイプに0.5倍
+        [4, 5, 0.5],  // でんき技はくさタイプに0.5倍
+        [4, 9, 0],    // でんき技はじめんタイプに無効
+        [4, 10, 2],   // でんき技はひこうタイプに2倍
+        [4, 15, 0.5], // でんき技はドラゴンタイプに0.5倍
+
+        [5, 2, 0.5],  // くさ技はほのおタイプに0.5倍
+        [5, 3, 2],    // くさ技はみずタイプに2倍
+        [5, 5, 0.5],  // くさ技はくさタイプに0.5倍
+        [5, 8, 0.5],  // くさ技はどくタイプに0.5倍
+        [5, 9, 2],    // くさ技はじめんタイプに2倍
+        [5, 10, 0.5], // くさ技はひこうタイプに0.5倍
+        [5, 12, 0.5], // くさ技はむしタイプに0.5倍
+        [5, 13, 2],   // くさ技はいわタイプに2倍
+        [5, 15, 0.5], // くさ技はドラゴンタイプに0.5倍
+        [5, 17, 0.5], // くさ技ははがねタイプに0.5倍
+
+        [6, 2, 0.5],  // こおり技はほのおタイプに0.5倍
+        [6, 3, 0.5],  // こおり技はみずタイプに0.5倍
+        [6, 5, 2],    // こおり技はくさタイプに2倍
+        [6, 6, 0.5],  // こおり技はこおりタイプに0.5倍
+        [6, 9, 2],    // こおり技はじめんタイプに2倍
+        [6, 10, 2],   // こおり技はひこうタイプに2倍
+        [6, 15, 2],   // こおり技はドラゴンタイプに2倍
+        [6, 17, 0.5], // こおり技ははがねタイプに0.5倍
+
+        [7, 1, 2],    // かくとう技はノーマルタイプに2倍
+        [7, 6, 2],    // かくとう技はこおりタイプに2倍
+        [7, 8, 0.5],  // かくとう技はどくタイプに0.5倍
+        [7, 10, 0.5], // かくとう技はひこうタイプに0.5倍
+        [7, 11, 0.5], // かくとう技はエスパータイプに0.5倍
+        [7, 12, 0.5], // かくとう技はむしタイプに0.5倍
+        [7, 13, 2],   // かくとう技はいわタイプに2倍
+        [7, 14, 0],   // かくとう技はゴーストタイプに無効
+        [7, 16, 2],   // かくとう技はあくタイプに2倍
+        [7, 17, 2],   // かくとう技ははがねタイプに2倍
+        [7, 18, 0.5], // かくとう技はフェアリータイプに0.5倍
+
+        [8, 5, 2],    // どく技はくさタイプに2倍
+        [8, 8, 0.5],  // どく技はどくタイプに0.5倍
+        [8, 9, 0.5],  // どく技はじめんタイプに0.5倍
+        [8, 13, 0.5], // どく技はいわタイプに0.5倍
+        [8, 14, 0.5], // どく技はゴーストタイプに0.5倍
+        [8, 17, 0],   // どく技ははがねタイプに無効
+        [8, 18, 2],   // どく技はフェアリータイプに2倍
+
+        [9, 2, 2],    // じめん技はほのおタイプに2倍
+        [9, 4, 2],    // じめん技はでんきタイプに2倍
+        [9, 5, 0.5],  // じめん技はくさタイプに0.5倍
+        [9, 8, 2],    // じめん技はどくタイプに2倍
+        [9, 10, 0],   // じめん技はひこうタイプに無効
+        [9, 12, 0.5], // じめん技はむしタイプに0.5倍
+        [9, 13, 2],   // じめん技はいわタイプに2倍
+        [9, 17, 2],   // じめん技ははがねタイプに2倍
+
+        [10, 4, 0.5],  // ひこう技はでんきタイプに0.5倍
+        [10, 5, 2],    // ひこう技はくさタイプに2倍
+        [10, 7, 2],    // ひこう技はかくとうタイプに2倍
+        [10, 12, 2],   // ひこう技はむしタイプに2倍
+        [10, 13, 0.5], // ひこう技はいわタイプに0.5倍
+        [10, 17, 0.5], // ひこう技ははがねタイプに0.5倍
+
+        [11, 7, 2],    // エスパー技はかくとうタイプに2倍
+        [11, 8, 2],    // エスパー技はどくタイプに2倍
+        [11, 11, 0.5], // エスパー技はエスパータイプに0.5倍
+        [11, 16, 0],   // エスパー技はあくタイプに無効
+        [11, 17, 0.5], // エスパー技ははがねタイプに0.5倍
+
+        [12, 2, 0.5],  // むし技はほのおタイプに0.5倍
+        [12, 5, 2],    // むし技はくさタイプに2倍
+        [12, 7, 0.5],  // むし技はかくとうタイプに0.5倍
+        [12, 8, 0.5],  // むし技はどくタイプに0.5倍
+        [12, 10, 0.5], // むし技はひこうタイプに0.5倍
+        [12, 11, 2],   // むし技はエスパータイプに2倍
+        [12, 14, 0.5], // むし技はゴーストタイプに0.5倍
+        [12, 16, 2],   // むし技はあくタイプに2倍
+        [12, 17, 0.5], // むし技ははがねタイプに0.5倍
+        [12, 18, 0.5], // むし技はフェアリータイプに0.5倍
+
+        [13, 2, 2],    // いわ技はほのおタイプに2倍
+        [13, 6, 2],    // いわ技はこおりタイプに2倍
+        [13, 7, 0.5],  // いわ技はかくとうタイプに0.5倍
+        [13, 9, 0.5],  // いわ技はじめんタイプに0.5倍
+        [13, 10, 2],   // いわ技はひこうタイプに2倍
+        [13, 12, 2],   // いわ技はむしタイプに2倍
+        [13, 17, 0.5], // いわ技ははがねタイプに0.5倍
+
+        [14, 1, 0],    // ゴースト技はノーマルタイプに無効
+        [14, 11, 2],   // ゴースト技はエスパータイプに2倍
+        [14, 14, 2],   // ゴースト技はゴーストタイプに2倍
+        [14, 16, 0.5], // ゴースト技はあくタイプに0.5倍
+
+        [15, 15, 2],   // ドラゴン技はドラゴンタイプに2倍
+        [15, 17, 0.5], // ドラゴン技ははがねタイプに0.5倍
+        [15, 18, 0],   // ドラゴン技はフェアリータイプに無効
+
+        [16, 7, 0.5],  // あく技はかくとうタイプに0.5倍
+        [16, 11, 2],   // あく技はエスパータイプに2倍
+        [16, 14, 2],   // あく技はゴーストタイプに2倍
+        [16, 16, 0.5], // あく技はあくタイプに0.5倍
+        [16, 18, 0.5], // あく技はフェアリータイプに0.5倍
+
+        [17, 2, 0.5],  // はがね技はほのおタイプに0.5倍
+        [17, 3, 0.5],  // はがね技はみずタイプに0.5倍
+        [17, 4, 0.5],  // はがね技はでんきタイプに0.5倍
+        [17, 6, 2],    // はがね技はこおりタイプに2倍
+        [17, 13, 2],   // はがね技はいわタイプに2倍
+        [17, 17, 0.5], // はがね技ははがねタイプに0.5倍
+        [17, 18, 2],   // はがね技はフェアリータイプに2倍
+
+        [18, 2, 0.5],  // フェアリー技はほのおタイプに0.5倍
+        [18, 7, 2],    // フェアリー技はかくとうタイプに2倍
+        [18, 8, 0.5],  // フェアリー技はどくタイプに0.5倍
+        [18, 15, 2],   // フェアリー技はドラゴンタイプに2倍
+        [18, 16, 2],   // フェアリー技はあくタイプに2倍
+        [18, 17, 0.5]  // フェアリー技ははがねタイプに0.5倍
+      ]
+
+      // 2.DOMの取得
+      const type1 = document.getElementById("type1");
+      const type2 = document.getElementById("type2");
+      const search = document.getElementById("search");
+
+      const x4 = document.getElementById("x4");
+      const x2 = document.getElementById("x2");
+      const x1_2 = document.getElementById("x1_2");
+      const x1_4 = document.getElementById("x1_4");
+      const x0 = document.getElementById("x0");
+
+      // 3.関数
+      function getRate(defId, atkId) {
+        if (defId === 0) return 1; // 未選択は等倍扱い
+        for (const row of typeChart) {
+          if (row[0] === atkId && row[1] === defId) {
+            return row[2];
+          }
+        }
+        return 1; //見つからなければ等倍
+      }
+
+      // 4.イベント
+      // 4-1.UI制御
+      type1.onchange = () => {
+        type2.disabled = (type1.value === 0);
+        search.disabled = (type1.value === 0);
+      };
+
+      // 4-2.検索処理
+      search.onclick = () => {
+        if (type1.value === "0") return; // type1 が未選択なら何も起こらない
+
+        const result = {
+          x4: [],
+          x2: [],
+          x1_2: [],
+          x1_4: [],
+          x0: []
+        };
+
+        for (let atk = 1; atk <= 18; atk++) {
+          const r1 = getRate(Number(type1.value), atk);
+          const r2 = getRate(Number(type2.value), atk);
+          const total = r1 * r2;
+
+          switch (total) {
+            case 4: result.x4.push(atk); break;
+            case 2: result.x2.push(atk); break;
+            case 0.5: result.x1_2.push(atk); break;
+            case 0.25: result.x1_4.push(atk); break;
+            case 0: result.x0.push(atk); break;
+          }
+        }
+
+        x4.textContent = result.x4.map(id => typeNames[id]).join(" / ");
+        x2.textContent = result.x2.map(id => typeNames[id]).join(" / ");
+        x1_2.textContent = result.x1_2.map(id => typeNames[id]).join(" / ");
+        x1_4.textContent = result.x1_4.map(id => typeNames[id]).join(" / ");
+        x0.textContent = result.x0.map(id => typeNames[id]).join(" / ");
+    };
+
+    </script>
+  </body>
+</html>
