@@ -216,11 +216,11 @@ search.onclick = () => {
     }
   }
 
-  x4.textContent = result.x4.map(id => typeNames[id]).join(" / ");
-  x2.textContent = result.x2.map(id => typeNames[id]).join(" / ");
-  x1_2.textContent = result.x1_2.map(id => typeNames[id]).join(" / ");
-  x1_4.textContent = result.x1_4.map(id => typeNames[id]).join(" / ");
-  x0.textContent = result.x0.map(id => typeNames[id]).join(" / ");
+  x4.innerHTML = result.x4.map(id => `<span class="type-tag type-${id}">${typeNames[id]}</span>`).join("");
+  x2.innerHTML = result.x2.map(id => `<span class="type-tag type-${id}">${typeNames[id]}</span>`).join("");
+  x1_2.innerHTML = result.x1_2.map(id => `<span class="type-tag type-${id}">${typeNames[id]}</span>`).join("");
+  x1_4.innerHTML = result.x1_4.map(id => `<span class="type-tag type-${id}">${typeNames[id]}</span>`).join("");
+  x0.innerHTML = result.x0.map(id => `<span class="type-tag type-${id}">${typeNames[id]}</span>`).join("");
 };
 
 // 4-3.タイプ呼び出し
