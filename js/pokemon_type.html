@@ -11,7 +11,7 @@
 		<meta property="og:description" content="ポケモンのタイプを入れて検索すると、効率のいい攻撃タイプが分かります"/>
 		<meta property="og:site_name" content="ポートフォリオ"/>
 		<meta property="og:image" content="../img/★★★.png"/>
-		<link rel="icon" href="https://yukai.yu-nagi.com/img/★★★.ico">
+		<link rel="icon" href="https://yukai.yu-nagi.com/img/pokemon_type.ico">
 
     <style type="text/css">
       .main {
@@ -19,6 +19,11 @@
         margin: 10px auto;
         text-align: center;
         line-height: 2.0;
+      }
+
+      input[type="text"] {
+        margin: 8px;
+        padding: 4px;
       }
 
       select {
@@ -34,12 +39,19 @@
       }
       
       table {
-        margin: 16px auto;
+        margin: 8px auto;
+        padding: 0;
         width: 90%;
-        empty-cells: show;
+        border-collapse: collapse;
+      }
+
+      tr {
+        margin: 0;
+        padding: 0;
       }
 
       td {
+        margin: 0;
         border: 1px solid #000000;
       }
 
@@ -63,11 +75,15 @@
   </head>
 
   <body>
-    <div class="header">ポケモンタイプ相性検索</div>
+    <div class="header"><img src="../img/pokemon_type.png" height="16px">&nbsp;&nbsp;ポケモンタイプ相性検索</div>
 		<hr>
     <div class="main">
-      <form>
-      <label>タイプ1</label>
+      <!-- 本来ここに<form>があったけど、サーバにデータを渡さないJavaScriptでの設計の場合、ただのリロードになってしまうので、いったん削除 -->
+        <span style="display: none;">
+        <label>ポケモン</label>
+        <input type="text" id="poke"><br>
+        </span>
+        <label>タイプ1</label>
         <select name="type1" id="type1">
           <option value="0">-</option>
           <option value="1">ノーマル</option>
@@ -112,14 +128,14 @@
           <option value="17">はがね</option>
           <option value="18">フェアリー</option>
         </select><br>
-        <input type="button" id="search"  value="検索">
+        <input type="button" id="search" value="検索">
         &nbsp;&nbsp;
-        <button id="reset" onclick="location.reload">リセット</button>
-      </form>
+        <input type="button" id="reset" value="リセット" onclick="location.reload()">
+      <!-- 本来ここに</form>があった -->
       <hr>
       <table>
         <tr bgcolor="lightpink">
-          <td colspan="2">効果ばつぐん</td>
+          <td colspan="2">こうか ばつぐん</td>
         </tr>
         <tr>
           <td width="25%">4倍</td><td id="x4"></td>
@@ -130,7 +146,7 @@
       </table>
       <table>
         <tr bgcolor="lightsteelblue">
-          <td colspan="2">効果いまひとつ</td>
+          <td colspan="2">こうか いまひとつ</td>
         </tr>
         <tr>
           <td width="25%">1/2倍</td><td id="x1_2"></td>
@@ -141,10 +157,11 @@
       </table>
       <table>
         <tr bgcolor="silver">
-          <td>効果なし</td>
+          <td colspan="2">こうか なし</td>
         </tr>
         <tr>
-          <td id="x0">&nbsp;</td>
+          <td width="25%">0倍</td>
+          <td id="x0"></td>
         </tr>
       </table>
 
