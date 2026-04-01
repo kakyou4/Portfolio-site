@@ -1,9 +1,4 @@
 // 1.定数・データ定義
-const pokemonForms = [
-  { id: "1_1", name: "ピカチュウ", type1: 4 },
-  { id: "2_1", name: "ラルトス", type1: 11, type2:18 },
-];
-
 const typeNames = {
   1: "ノーマル",
   2: "ほのお",
@@ -84,7 +79,7 @@ const typeChart = [
   { atkId: 8, defId: 13, rate: 0.5 },  // どく技はいわタイプに0.5倍
   { atkId: 8, defId: 14, rate: 0.5 },  // どく技はゴーストタイプに0.5倍
   { atkId: 8, defId: 17, rate: 0 },    // どく技ははがねタイプに無効
-  { atkId: 8, defId: 18, rate: 0 },    // どく技はフェアリータイプに無効
+  { atkId: 8, defId: 18, rate: 2 },    // どく技はフェアリータイプに無効
   { atkId: 9, defId: 2, rate: 2 },     // じめん技はほのおタイプに2倍
   { atkId: 9, defId: 4, rate: 2 },     // じめん技はでんきタイプに2倍
   { atkId: 9, defId: 5, rate: 0.5 },   // じめん技はくさタイプに0.5倍
@@ -149,6 +144,8 @@ const typeChart = [
 ]
 
 // 2.DOMの取得
+const list = document.getElementById("names");
+  const options = []; // datalist一時保存用
 const poke = document.getElementById("poke");
 const type1 = document.getElementById("type1");
 const type2 = document.getElementById("type2");
@@ -161,6 +158,7 @@ const x1_4 = document.getElementById("x1_4");
 const x0 = document.getElementById("x0");
 
 // 3.関数
+// 倍率取得
 function getRate(defId, atkId) {
   if (defId === 0) return 1; // 未選択は等倍扱い
   for (const row of typeChart) {
@@ -171,40 +169,25 @@ function getRate(defId, atkId) {
   return 1; //見つからなければ等倍
 }
 
+// ポケモン名をDBと紐付け（検索不一致だとundefined）
 function getPoke(name) {
   return pokemonForms.find(p => p.name ===name); //『p』はコールバック関数の引数
 }
-// 検索不一致の場合、『p』には『undefined』が入る
 
+// DBからタイプ取得
 function applyTypes(poke) {
   if (!poke) return;
   type1.value = poke.type1;
   type2.value = poke.type2 ?? "0";
 }
 
-// 4.イベント
-// 4-1.UI制御
-type1.onchange = () => {
-  type2.disabled = (type1.value === "0");
-  search.disabled = (type1.value === "0");
-};
-
-// 4-2.検索処理
-search.onclick = () => {
-  console.log("search.onclick fired");
-  if (type1.value === "0") return; // type1 が未選択なら何も起こらない
-
-  const result = {
-    x4: [],
-    x2: [],
-    x1_2: [],
-    x1_4: [],
-    x0: []
-  };
+// タイプ相性計算
+function calc(t1, t2) {
+  const result = { x4: [], x2: [], x1_2: [], x1_4: [], x0: [] };
 
   for (let atk = 1; atk <= 18; atk++) {
-    const r1 = getRate(Number(type1.value), atk);
-    const r2 = getRate(Number(type2.value), atk);
+    const r1 = getRate(Number(t1), atk);
+    const r2 = getRate(Number(t2), atk);
     const total = r1 * r2;
 
     switch (total) {
@@ -215,29 +198,106 @@ search.onclick = () => {
       case 0: result.x0.push(atk); break;
     }
   }
+  return result;
+}
 
+// HTMLに反映
+function draw(result) {
   x4.innerHTML = result.x4.map(id => `<span class="type-tag type-${id}">${typeNames[id]}</span>`).join("");
   x2.innerHTML = result.x2.map(id => `<span class="type-tag type-${id}">${typeNames[id]}</span>`).join("");
   x1_2.innerHTML = result.x1_2.map(id => `<span class="type-tag type-${id}">${typeNames[id]}</span>`).join("");
   x1_4.innerHTML = result.x1_4.map(id => `<span class="type-tag type-${id}">${typeNames[id]}</span>`).join("");
   x0.innerHTML = result.x0.map(id => `<span class="type-tag type-${id}">${typeNames[id]}</span>`).join("");
+}
+
+// HTMLクリア
+function clear() {
+  x4.innerHTML = "";
+  x2.innerHTML = "";
+  x1_2.innerHTML = "";
+  x1_4.innerHTML = "";
+  x0.innerHTML = "";
+}
+
+// 4.イベント
+// UI制御
+type1.onchange = () => {
+  // type1未選択の場合、type2の選択と検索不可
+  type2.disabled = (type1.value === "0");
+  search.disabled = (type1.value === "0");
 };
 
-// 4-3.タイプ呼び出し
-poke.onchange = () => {
-  const name = poke.value.trim(); //DOMのpokeの値を格納
-  const p    = getPoke(name);     //関数を呼び出して結果を格納
-  if (p) {applyTypes(p);}
-
-  if (name === "") {
+poke.addEventListener("input", (e) => {
+  // テキストボックスが空ならtype1の選択可
+  if (poke.value.trim() === "") {
     type1.disabled = false;
     type2.disabled = false;
   }
 
-  if (name !== "") {
+  // テキストボックスに何か入っていたらtype1,2の選択不可
+  if (poke.value.trim() !== "") {
     type1.disabled = true;
     type2.disabled = true;
   }
+});
+
+// 検索処理
+search.onclick = () => {
+  console.log("search.onclick fired");
+  if (type1.value === "0") return; // type1 が未選択なら何も起こらない
 };
 
-// デバッグ
+type1.addEventListener("change", () => {
+  if (type1.value === "0") {
+    clear();        // 未選択なら描画リセット
+    return;
+  }
+  const result = calc(type1.value, type2.value);
+  draw(result);
+});
+
+type2.addEventListener("change", () => {
+  if (type1.value === "0") return; // type1 が未選択なら無効
+  const result = calc(type1.value, type2.value);
+  draw(result);
+});
+
+// タイプ呼び出し
+poke.addEventListener("change", (e) => {
+  const name = poke.value.trim(); //DOMのpokeの値を格納
+  const p    = getPoke(name);     //DBから一致した名前を格納（不一致だとundefined）
+  if (p) {
+    applyTypes(p);                //DBからタイプ取得
+    const result = calc(p.type1, p.type2 ?? 0); //計算
+    draw(result);                 //描画
+  }
+});
+
+// datalist読み込み
+pokemonForms.forEach(item => {
+  const opt = document.createElement("option");
+  opt.value = item.name;
+  options.push(opt);
+  options.forEach(opt => list.appendChild(opt));
+});
+
+poke.addEventListener("input", () => {
+  if (poke.value.length < 2) {
+    poke.removeAttribute("list");
+  } else {
+    poke.setAttribute("list", "names");
+  }
+});
+
+
+// poke.addEventListener("input", () => {
+//   const v = poke.value.trim();
+//   if (v.length < 2) {
+//     list.innerHTML = "";
+//     return;
+//   }
+//   list.innerHTML = ""
+//   options.forEach(opt => list.appendChild(opt));
+// });
+
+// 5.デバッグ
